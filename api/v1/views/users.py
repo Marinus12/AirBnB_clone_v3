@@ -2,7 +2,7 @@
 """Viewa to handle all Users objects."""
 
 from models import storage
-from api.v1.viewa import app_views
+from api.v1.views import app_views
 from models.base_model import BaseModel
 from flask import jsonify, abort, request, make_response
 
@@ -11,7 +11,7 @@ from flask import jsonify, abort, request, make_response
 def get_all_users():
     """Return all users objects."""
     users = storage.all(User)
-    user_obj = [user.to_dict() for user in users.values()]
+    users_obj = [user.to_dict() for user in users.values()]
     return jsonify(users_obj)
 
 
