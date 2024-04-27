@@ -62,7 +62,7 @@ def update_user(user_id):
     user = storage.get(User, user_id)
     if not user:
         abort(404)
-    ignore_keys = ['id', 'created_id', 'updated_at', 'email']
+    ignore_keys = ['id', 'created_at', 'updated_at', 'email']
 
     for key, value in data.items():
         if key not in ignore_keys:

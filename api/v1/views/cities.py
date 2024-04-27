@@ -71,7 +71,7 @@ def put_city(city_id):
     city = storage.get(City, city_id)
     if not city:
         abort(404)
-    ignore_keys = ['id', 'created_id', 'updated_at']
+    ignore_keys = ['id', 'state_id', 'created_at', 'updated_at']
 
     for key, value in put_req.items():
         if key not in ignore_keys:

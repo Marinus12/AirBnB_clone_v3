@@ -65,7 +65,7 @@ def put_amenity(amenity_id):
     amenity = storage.get(Amenity, amenity_id)
     if not amenity:
         abort(404)
-    ignore_keys = ['id', 'created_id', 'updated_at']
+    ignore_keys = ['id', 'created_at', 'updated_at']
 
     for key, value in put_req.items():
         if key not in ignore_keys:

@@ -79,7 +79,7 @@ def put_place(place_id):
     place = storage.get(Place, place_id)
     if not place:
         abort(404)
-    ignore_keys = ['id', 'created_id', 'updated_at', 'user_id', 'city_id']
+    ignore_keys = ['id', 'created_at', 'updated_at', 'user_id', 'city_id']
 
     for key, value in put_req.items():
         if key not in ignore_keys:
