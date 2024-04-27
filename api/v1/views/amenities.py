@@ -51,6 +51,7 @@ def post_amenity():
 
     new_amen = Amenity(**post_req)
     storage.new(new_amen)
+    storage.save()
     return make_response(new_amen.to_dict(), 201)
 
 
