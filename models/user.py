@@ -6,7 +6,7 @@ from os import getenv
 import sqlalchemy
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
-
+from hashlib import md5
 
 class User(BaseModel, Base):
     """Representation of a user """
@@ -26,4 +26,13 @@ class User(BaseModel, Base):
 
     def __init__(self, *args, **kwargs):
         """initializes user"""
+        if 'password' in kwargs:
+            kwargs['password'] = md5(kwargs['passwrod'].encode()).hexdigest()
         super().__init__(*args, **kwargs)
+
+    def save(self):
+        """Updates the attributes 'updated_at' with the current datetime"""
+        self.updated_at = datetime.utcnow()
+        self.password = md5(self.password.encode()).hexdigest()
+        models.storage.new(self)
+        models.storage.save()

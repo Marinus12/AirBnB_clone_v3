@@ -68,7 +68,7 @@ def create_review(place_id):
     return make_response(new_review.to_dict(), 201)
 
 
-@app_views.route('/reviews/<review_id>', methods=['PUT'], strict_slahses=False)
+@app_views.route('/reviews/<review_id>', methods=['PUT'], strict_slashes=False)
 def update_review(review_id):
     """Update a review with the provided review id"""
     data = request.get_json()

@@ -25,7 +25,7 @@ def get_state(state_id):
     return jsonify(state.to_dict())
 
 
-@app_views.route('states/<state_id>', methods=['DELETE'], strict_slashes=False)
+@app_views.route('/states/<state_id>', methods=['DELETE'], strict_slashes=False)
 def delete_state(state_id):
     """Deletes state by id"""
     try:
@@ -52,7 +52,7 @@ def create_state():
     return make_response(new_state.to_dict(), 201)
 
 
-@app_views.route('states/<state_id>', methods=['PUT'], strict_slashes=False)
+@app_views.route('/states/<state_id>', methods=['PUT'], strict_slashes=False)
 def update_state(state_id):
     """Update the state object with the provided id"""
     data = request.get_json()
