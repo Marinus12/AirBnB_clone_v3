@@ -31,7 +31,7 @@ def delete_place_amenity(place_id, amenity_id):
     if not amenity:
         abort(404)
 
-    if amenity not in place_amenities:
+    if amenity not in place.amenities:
         abort(404)
     place.amenities.remove(amenity)
     storage.save()

@@ -56,7 +56,7 @@ def post_place(city_id):
     if 'name' not in post_req:
         abort(400, 'Missing name')
 
-    user_id = post_req['User_d']
+    user_id = post_req['user_id']
 
     __user = storage.get(User, user_id)
     __city = storage.get(City, city_id)
@@ -86,3 +86,37 @@ def put_place(place_id):
             setattr(place, key, value)
     storage.save()
     return make_response(place.to_dict(), 200)
+
+
+@app_views.route('/places_search', methods=['POST'], strict_slashes=False)
+def place_search():
+    """Search for places based on provided criteria"""
+    post_req = request.get_json()
+    if not post_req:
+        abort(400, 'Not a JSON')
+
+    states = post_req.get('states', [])
+    cities = post_req.get('cities', [])
+    amenities = post_req.get('amenities', [])
+
+    if not states and not cities:
+        places = storage.all('Place').values()
+    else:
+        places = []
+        for state_id in states:
+            state = storage.get(State, state_id)
+            if state:
+                places.extend(state.places)
+        for city_id in cities:
+            city = storage.get(City, city_id)
+            if city:
+                places.extend(city.places)
+
+    if amenities:
+        filtered_places = []
+        for place in places:
+            if all(amenity_id in place.amenity_ids for
+                   amenity_id in amenities):
+                filtered_places.append(place)
+        places = filtered_places
+    return jsonify([place.to_dict() for place in places]), 200
