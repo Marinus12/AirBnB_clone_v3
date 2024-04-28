@@ -8,6 +8,8 @@ from flask import jsonify, abort, request, make_response
 from models.city import City
 from models.user import User
 from models.place import Place
+from models.state import State
+from models.amenity import Amenity
 
 
 @app_views.route('/cities/<city_id>/places',
@@ -99,14 +101,14 @@ def place_search():
     cities = post_req.get('cities', [])
     amenities = post_req.get('amenities', [])
 
+    places = []
     if not states and not cities:
         places = storage.all('Place').values()
     else:
-        places = []
         for state_id in states:
             state = storage.get(State, state_id)
             if state:
-                places.extend(state.places)
+                places.extend(state.cities)
         for city_id in cities:
             city = storage.get(City, city_id)
             if city:
@@ -115,8 +117,8 @@ def place_search():
     if amenities:
         filtered_places = []
         for place in places:
-            if all(amenity_id in place.amenity_ids for
+            if all(amenity_id in place.amenities for
                    amenity_id in amenities):
                 filtered_places.append(place)
         places = filtered_places
-    return jsonify([place.to_dict() for place in places]), 200
+    return jsonify([place.to_dict() for place in places])

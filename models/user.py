@@ -7,6 +7,7 @@ import sqlalchemy
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
 from hashlib import md5
+from datetime import datetime
 
 
 class User(BaseModel, Base):
