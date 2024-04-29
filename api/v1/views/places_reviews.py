@@ -37,35 +37,39 @@ def delete_review(review_id):
     review = storage.get(Review, review_id)
     if not review:
         abort(404)
-    review.delete()
+    storage.delete(review)
     storage.save()
-    return make_response({}, 200)
+    return make_response(jsonify({}), 200)
 
 
 @app_views.route('/places/<place_id>/reviews',
                  methods=['POST'], strict_slashes=False)
 def create_review(place_id):
-    """Creates a new place review"""
-    data = request.get_json()
-    if not data:
-        abort(400, 'Not a JSON')
-    if 'user_id' not in data:
-        abort(400, 'Missing user_id')
-    if 'text' not in data:
-        abort(400, 'Missing text')
+    """Creates a Review"""
+    place = storage.get(Place, place_id)
 
-    user_id = data['user_id']
-
-    __user = storage.get(User, user_id)
-    __place = storage.get(Place, place_id)
-    if not __user or not __place:
+    if not place:
         abort(404)
 
-    new_review = Review(**data)
-    setattr(new_review, 'place_id', place_id)
-    storage.new(new_review)
-    storage.save()
-    return make_response(new_review.to_dict(), 201)
+    if not request.get_json():
+        abort(400, description="Not a JSON")
+
+    if 'user_id' not in request.get_json():
+        abort(400, description="Missing user_id")
+
+    data = request.get_json()
+    user = storage.get(User, data['user_id'])
+
+    if not user:
+        abort(404)
+
+    if 'text' not in request.get_json():
+        abort(400, description="Missing text")
+
+    data['place_id'] = place_id
+    instance = Review(**data)
+    instance.save()
+    return make_response(jsonify(instance.to_dict()), 201)
 
 
 @app_views.route('/reviews/<review_id>', methods=['PUT'], strict_slashes=False)
@@ -73,7 +77,7 @@ def update_review(review_id):
     """Update a review with the provided review id"""
     data = request.get_json()
     if not data:
-        abort(400, 'Not a JSON')
+        abort(400, description='Not a JSON')
     review = storage.get(Review, review_id)
     if not review:
         abort(404)
@@ -83,4 +87,4 @@ def update_review(review_id):
         if key not in ignore_keys:
             setattr(review, key, value)
     storage.save()
-    return make_response(review.to_dict(), 200)
+    return make_response(jsonify(review.to_dict()), 200)
