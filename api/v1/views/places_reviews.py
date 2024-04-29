@@ -77,7 +77,7 @@ def update_review(review_id):
     review = storage.get(Review, review_id)
     if not review:
         abort(404)
-    ignore_keys = ['id', 'created_at', 'updated_at', 'user_id', 'place_id']
+    ignore_keys = ['id', 'user_id', 'place_id','created_at', 'updated_at']
 
     for key, value in data.items():
         if key not in ignore_keys:
