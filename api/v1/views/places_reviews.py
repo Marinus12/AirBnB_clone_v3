@@ -96,12 +96,12 @@ def put_review(review_id):
     if not review:
         abort(404)
 
-    if not request.get_json():
+    data = request.get_json()
+    if not data:
         abort(400, description="Not a JSON")
 
     ignore = ['id', 'user_id', 'place_id', 'created_at', 'updated_at']
 
-    data = request.get_json()
     for key, value in data.items():
         if key not in ignore:
             setattr(review, key, value)
